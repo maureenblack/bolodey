@@ -8,17 +8,21 @@ import Profile from './pages/Profile';
 import Services from './pages/Services';
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/services" element={<Services />} />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/services/:id" element={<ServiceDetails />} />
+                <Route path="/payments" element={<PaymentForm />} />
+            </Routes>
+        </Router>
+    );
 }
+
 
 export default App;
