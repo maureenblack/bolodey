@@ -1,45 +1,47 @@
+// server/routes/userRoutes.js
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
 const router = express.Router();
+
 // Register a new user
 router.post('/register', async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  // ...
+});
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+// Login a user
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
     }
 
-    // Create a new user
-    const user = new User({ name, email, password });
-    await user.save();
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
-    res.status(201).json({ message: 'User created successfully' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ token, user });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Login a user
-router.post('/login', async (req, res) => {
-  // ...
+// Protected route (example)
+router.get('/profile', authMiddleware, async (req, res) => {
+  const user = req.user;
+  res.json(user);
+  
 });
 
-// Get user details
-router.get('/user', async (req, res) => {
-  // ...
+router.get('/profile', authMiddleware, async (req, res) => {
+  const user = req.user;
+  res.json(user);
 });
-
-// Update user profile
-router.put('/user', async (req, res) => {
-  // ...
-});
-
-// Delete user account
-router.delete('/user', async (req, res) => {
-  // ...
-});
-
 module.exports = router;

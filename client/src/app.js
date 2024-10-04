@@ -1,28 +1,33 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import Home from './pages/Home';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Profile from './pages/Profile';
-import Services from './pages/Services';
+// App.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/profile" element={<UserProfile />} />
-                <Route path="/services/:id" element={<ServiceDetails />} />
-                <Route path="/payments" element={<PaymentForm />} />
-            </Routes>
-        </Router>
-    );
-}
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://your-api-endpoint');
+        setData(response.data);
+      } catch (error) {
+        setError(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      {error ? (
+        <p>Error: {error.message}</p>
+      ) : (
+        data && <div>{data.message}</div>
+      )}
+    </div>
+  );
+}
 
 export default App;
